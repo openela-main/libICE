@@ -1,0 +1,31 @@
+From 32a9acc48463931e598188e3277c88925a48d7b5 Mon Sep 17 00:00:00 2001
+From: Olivier Fourdan <ofourdan@redhat.com>
+Date: Wed, 10 Apr 2019 11:15:11 +0200
+Subject: [PATCH libICE 2/3] _IceRead: Avoid possible use-after-free
+
+`_IceRead()` gets called from multiple places which do not expect the
+connection to be freed.
+
+Do not free the connection data in `_IceRead()` to avoid potential
+use-after-free issue in the various callers.
+
+Signed-off-by: Olivier Fourdan <ofourdan@redhat.com>
+---
+ src/misc.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/src/misc.c b/src/misc.c
+index d2e9150..54b179d 100644
+--- a/src/misc.c
++++ b/src/misc.c
+@@ -242,7 +242,6 @@ _IceRead (
+ 		 */
+ 
+ 		_IceConnectionClosed (iceConn);	    /* invoke watch procs */
+-		_IceFreeConnection (iceConn);
+ 
+ 		return (0);
+ 	    }
+-- 
+2.21.0
+

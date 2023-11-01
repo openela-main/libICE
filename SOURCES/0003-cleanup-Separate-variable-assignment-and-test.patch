@@ -1,0 +1,42 @@
+From c4fcd360d060d50673a4a35ed39c4fe7e4bc3561 Mon Sep 17 00:00:00 2001
+From: Olivier Fourdan <ofourdan@redhat.com>
+Date: Thu, 11 Apr 2019 09:05:15 +0200
+Subject: [PATCH libICE 3/3] cleanup: Separate variable assignment and test
+
+Assigning and testing a value in a single statement hinders code clarity
+and may confuses static code analyzers.
+
+Separate the assignment and the test for clarity.
+
+Signed-off-by: Olivier Fourdan <ofourdan@redhat.com>
+---
+ src/process.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/src/process.c b/src/process.c
+index f0c3369..e3e0a35 100644
+--- a/src/process.c
++++ b/src/process.c
+@@ -919,7 +919,8 @@ ProcessConnectionSetup (
+     EXTRACT_STRING (pData, swap, vendor);
+     EXTRACT_STRING (pData, swap, release);
+ 
+-    if ((hisAuthCount = message->authCount) > 0)
++    hisAuthCount = message->authCount;
++    if (hisAuthCount > 0)
+     {
+ 	hisAuthNames = malloc (hisAuthCount * sizeof (char *));
+ 	EXTRACT_LISTOF_STRING (pData, swap, hisAuthCount, hisAuthNames);
+@@ -1965,7 +1966,8 @@ ProcessProtocolSetup (
+     EXTRACT_STRING (pData, swap, vendor);
+     EXTRACT_STRING (pData, swap, release);
+ 
+-    if ((hisAuthCount = message->authCount) > 0)
++    hisAuthCount = message->authCount;
++    if (hisAuthCount > 0)
+     {
+ 	hisAuthNames = malloc (hisAuthCount * sizeof (char *));
+ 	EXTRACT_LISTOF_STRING (pData, swap, hisAuthCount, hisAuthNames);
+-- 
+2.21.0
+
